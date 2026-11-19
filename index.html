@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Military Birds</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #080e0a;
+      color: #c8e6c9;
+      font-family: "Courier New", monospace;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #hud {
+      position: fixed;
+      inset: 0;
+      display: none;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .top-bar {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .box {
+      background: rgba(9, 17, 11, 0.85);
+      border: 2px solid #2e7d32;
+      padding: 9px 11px;
+    }
+
+    .line {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #a5d6a7;
+      font-weight: bold;
+    }
+
+    .hi {
+      color: #69f0ae;
+    }
+
+    .hp-track {
+      width: 165px;
+      height: 9px;
+      background: #132216;
+      border: 1px solid #388e3c;
+      margin: 5px 0;
+    }
+
+    .hp-fill {
+      height: 100%;
+      width: 100%;
+      background: #00e676;
+    }
+
+    .board {
+      min-width: 175px;
+      pointer-events: auto;
+    }
+
+    .board-head {
+      font-size: 12px;
+      color: #81c784;
+      border-bottom: 1px solid #2e7d32;
+      padding-bottom: 4px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .board-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 2px 0;
+      gap: 12px;
+    }
+
+    .board-item.me {
+      color: #69f0ae;
+      font-weight: bold;
+    }
+
+    .bottom-bar {
+      position: absolute;
+      bottom: 12px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .tip {
+      font-size: 11px;
+      color: #81c784;
+      background: rgba(9, 17, 11, 0.8);
+      border: 1px solid #2e7d32;
+      padding: 6px 9px;
+    }
+
+    .btns {
+      display: flex;
+      gap: 7px;
+      pointer-events: auto;
+    }
+
+    .btn {
+      background: #132817;
+      color: #69f0ae;
+      border: 2px solid #2e7d32;
+      padding: 7px 11px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      border-color: #69f0ae;
+      background: #1b3820;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    #lobby {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(6, 11, 8, 0.95);
+      padding: 14px;
+      z-index: 10;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 470px;
+      background: #0b150e;
+      border: 2px solid #2e7d32;
+      padding: 20px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #69f0ae;
+      letter-spacing: 1px;
+    }
+
+    .sub {
+      font-size: 12px;
+      color: #81c784;
+      margin-bottom: 16px;
+    }
+
+    .group {
+      margin-bottom: 13px;
+    }
+
+    .lbl {
+      display: block;
+      font-size: 12px;
+      color: #a5d6a7;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .txt {
+      width: 100%;
+      background: #070d08;
+      border: 2px solid #2e7d32;
+      color: #e8f5e9;
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .txt:focus {
+      border-color: #69f0ae;
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
+
+    .pick {
+      background: #09120b;
+      border: 2px solid #255728;
+      color: #a5d6a7;
+      padding: 8px 6px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .pick.on {
+      background: #16331c;
+      border-color: #69f0ae;
+      color: #69f0ae;
+    }
+
+    .room-box {
+      background: #070d08;
+      border: 1px solid #255728;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: #81c784;
+      margin-bottom: 14px;
+    }
+
+    .room-names {
+      color: #c8e6c9;
+      margin-top: 3px;
+      word-break: break-word;
+    }
+
+    .go-btn {
+      width: 100%;
+      background: #1b5e20;
+      border: 2px solid #69f0ae;
+      color: #f1f8e9;
+      padding: 11px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .go-btn:hover {
+      background: #2e7d32;
+    }
+
+    #msg {
+      position: fixed;
+      bottom: 58px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f2414;
+      border: 1px solid #69f0ae;
+      color: #69f0ae;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: bold;
+      display: none;
+      z-index: 20;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+
+  <div id="hud">
+    <div class="top-bar">
+      <div class="box">
+        <div class="line">NAME: <span id="hudName" class="hi">Player</span> | ROOM: <span id="hudRoom" class="hi">PVP-1</span> | WS: <span id="hudWs" class="hi">OFF</span></div>
+        <div class="line">KILLS: <span id="hudKills" class="hi">0</span> | DEATHS: <span id="hudDeaths" class="hi">0</span></div>
+        <div class="hp-track"><div id="hpFill" class="hp-fill"></div></div>
+        <div class="line">HP: <span id="hudHp" class="hi">100</span> | MISSILE: <span id="hudMsl" class="hi">READY</span></div>
+      </div>
+
+      <div class="box board">
+        <div class="board-head">PVP TABLE</div>
+        <div id="boardList"></div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="tip">WASD / Arrows: Move | Space / Click: Shoot | Shift / E: Missile | Drag: Touch</div>
+      <div class="btns">
+        <button id="mslBtn" class="btn" type="button">MISSILE</button>
+        <button id="copyHudBtn" class="btn" type="button">INVITE</button>
+        <button id="backBtn" class="btn" type="button">LOBBY</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="lobby">
+    <div class="card">
+      <div class="title">MILITARY BIRDS</div>
+      <div class="sub">PVP AIR COMBAT</div>
+
+      <div class="group">
+        <label class="lbl" for="nameInp">NAME</label>
+        <input id="nameInp" class="txt" type="text" maxlength="16" value="Player" />
+      </div>
+
+      <div class="group">
+        <label class="lbl" for="roomInp">ROOM</label>
+        <div class="row">
+          <input id="roomInp" class="txt" type="text" maxlength="14" value="PVP-1" />
+          <button id="copyLobbyBtn" class="btn" type="button">COPY</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <label class="lbl" for="wsInp">WS URL</label>
+        <input id="wsInp" class="txt" type="text" value="ws://localhost:8080" />
+      </div>
+
+      <div class="group">
+        <label class="lbl">JET</label>
+        <div class="grid3" id="jetPick">
+          <button class="pick on" data-jet="raptor" type="button">F-22 RAPTOR</button>
+          <button class="pick" data-jet="hog" type="button">A-10 HOG</button>
+          <button class="pick" data-jet="felon" type="button">SU-57 FELON</button>
+        </div>
+      </div>
+
+      <div class="room-box">
+        <div>ONLINE (<span id="onlineCnt">1</span>)</div>
+        <div id="onlineNames" class="room-names">Player (You)</div>
+      </div>
+
+      <button id="startBtn" class="go-btn" type="button">PLAY PVP</button>
+    </div>
+  </div>
+
+  <div id="msg"></div>
+
+  <script>
+    const canvas = document.getElementById("c");
+    const ctx = canvas.getContext("2d");
+
+    const lobby = document.getElementById("lobby");
+    const hud = document.getElementById("hud");
+    const nameInp = document.getElementById("nameInp");
+    const roomInp = document.getElementById("roomInp");
+    const wsInp = document.getElementById("wsInp");
+    const startBtn = document.getElementById("startBtn");
+    const copyLobbyBtn = document.getElementById("copyLobbyBtn");
+    const copyHudBtn = document.getElementById("copyHudBtn");
+    const backBtn = document.getElementById("backBtn");
+    const mslBtn = document.getElementById("mslBtn");
+    const onlineCnt = document.getElementById("onlineCnt");
+    const onlineNames = document.getElementById("onlineNames");
+    const boardList = document.getElementById("boardList");
+    const msgBox = document.getElementById("msg");
+
+    const hudName = document.getElementById("hudName");
+    const hudRoom = document.getElementById("hudRoom");
+    const hudWs = document.getElementById("hudWs");
+    const hudKills = document.getElementById("hudKills");
+    const hudDeaths = document.getElementById("hudDeaths");
+    const hudHp = document.getElementById("hudHp");
+    const hudMsl = document.getElementById("hudMsl");
+    const hpFill = document.getElementById("hpFill");
+
+    const JETS = {
+      raptor: { speed: 370, hp: 100, cd: 0.13, dmg: 18, main: "#00e676", wing: "#1b5e20" },
+      hog:    { speed: 300, hp: 150, cd: 0.10, dmg: 22, main: "#76ff03", wing: "#33691e" },
+      felon:  { speed: 400, hp: 115, cd: 0.14, dmg: 20, main: "#64ffda", wing: "#004d40" }
+    };
+
+    const params = new URLSearchParams(location.search);
+    if (params.get("room")) roomInp.value = params.get("room").toUpperCase().slice(0, 14);
+    if (params.get("ws")) wsInp.value = params.get("ws");
+
+    const myId = "p-" + Math.random().toString(36).slice(2, 9);
+    let chosenJet = "raptor";
+    let playing = false;
+    let roomCode = "PVP-1";
+    let bc = null;
+    let bcKey = "";
+    let socket = null;
+    let sockUp = false;
+
+    let w = (canvas.width = innerWidth);
+    let h = (canvas.height = innerHeight);
+
+    const me = {
+      id: myId,
+      name: "Player",
+      jet: "raptor",
+      x: w * 0.5,
+      y: h * 0.72,
+      tilt: 0,
+      hp: 100,
+      maxHp: 100,
+      kills: 0,
+      deaths: 0,
+      shotCd: 0,
+      mslCd: 0,
+      reviveAt: 0,
+      alive: true,
+      seen: Date.now()
+    };
+
+    const foes = new Map();
+    const shots = [];
+    const rockets = [];
+    const sparks = [];
+    const clouds = [];
+
+    const held = new Set();
+    let dragging = false;
+    let firingTouch = false;
+    let aimPos = { x: me.x, y: me.y };
+
+    let ac = null;
+    function beep(freq, dur, kind = "square", vol = 0.035) {
+      try {
+        if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+        if (ac.state === "suspended") ac.resume();
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        o.type = kind;
+        o.frequency.setValueAtTime(freq, ac.currentTime);
+        g.gain.setValueAtTime(vol, ac.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + dur);
+        o.connect(g);
+        g.connect(ac.destination);
+        o.start();
+        o.stop(ac.currentTime + dur);
+      } catch (_) {}
+    }
+
+    function notice(text) {
+      msgBox.textContent = text;
+      msgBox.style.display = "block";
+      clearTimeout(notice._timer);
+      notice._timer = setTimeout(() => {
+        msgBox.style.display = "none";
+      }, 1700);
+    }
+
+    function cleanName(v) {
+      const s = (v || "").trim().replace(/\s+/g, " ");
+      return s || "Player";
+    }
+
+    function cleanRoom(v) {
+      const s = (v || "").trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+      return s || "PVP-1";
+    }
+
+    function cleanWs(v) {
+      const s = (v || "").trim();
+      return /^wss?:\/\//i.test(s) ? s : "ws://localhost:8080";
+    }
+
+    function makeClouds() {
+      clouds.length = 0;
+      for (let i = 0; i < 15; i++) {
+        clouds.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          w: 60 + Math.random() * 100,
+          h: 20 + Math.random() * 32,
+          spd: 35 + Math.random() * 55,
+          a: 0.04 + Math.random() * 0.05
+        });
+      }
+    }
+
+    function recvMsg(m) {
+      if (!m || m.senderId === myId) return;
+
+      if (m.type === "state") {
+        const existed = foes.has(m.senderId);
+        foes.set(m.senderId, {
+          id: m.senderId,
+          name: cleanName(m.name),
+          jet: m.jet in JETS ? m.jet : "raptor",
+          x: m.x,
+          y: m.y,
+          tilt: m.tilt || 0,
+          hp: m.hp,
+          maxHp: m.maxHp,
+          kills: m.kills || 0,
+          deaths: m.deaths || 0,
+          alive: m.alive !== false,
+          seen: Date.now()
+        });
+        if (!existed && playing) notice(cleanName(m.name) + " joined");
+      } else if (m.type === "bullet") {
+        shots.push({
+          owner: m.senderId,
+          x: m.x,
+          y: m.y,
+          vx: m.vx,
+          vy: m.vy,
+          dmg: m.dmg || 18,
+          life: 1.7
+        });
+      } else if (m.type === "missile") {
+        rockets.push({
+          owner: m.senderId,
+          x: m.x,
+          y: m.y,
+          vx: m.vx,
+          vy: m.vy,
+          dmg: m.dmg || 55,
+          life: 2.6
+        });
+      } else if (m.type === "hit_player") {
+        if (m.targetId === myId && me.alive) {
+          hurtMe(m.dmg);
+        }
+      } else if (m.type === "leave") {
+        foes.delete(m.senderId);
+      }
+    }
+
+    function pushNet(obj) {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        try {
+          socket.send(JSON.stringify(obj));
+        } catch (_) {}
+      }
+      if (bc) {
+        try {
+          bc.postMessage(obj);
+        } catch (_) {}
+      }
+    }
+
+    function openWs(code, url) {
+      try {
+        if (socket) {
+          try {
+            socket.close();
+          } catch (_) {}
+        }
+        const ws = new WebSocket(url);
+        socket = ws;
+
+        ws.onopen = () => {
+          if (socket !== ws) return;
+          sockUp = true;
+          ws.send(JSON.stringify({ type: "join", senderId: myId, roomCode: code }));
+          sendMyState();
+        };
+
+        ws.onmessage = (ev) => {
+          if (socket !== ws) return;
+          try {
+            recvMsg(JSON.parse(ev.data));
+          } catch (_) {}
+        };
+
+        ws.onclose = () => {
+          if (socket === ws) sockUp = false;
+        };
+
+        ws.onerror = () => {
+          if (socket === ws) sockUp = false;
+        };
+      } catch (_) {
+        sockUp = false;
+      }
+    }
+
+    function connectRoom(code, url) {
+      roomCode = code;
+      const key = "mb_pvp_" + code;
+      if (!bc || bcKey !== key) {
+        if (bc) bc.close();
+        bcKey = key;
+        foes.clear();
+        bc = new BroadcastChannel(key);
+        bc.onmessage = (ev) => recvMsg(ev.data);
+      }
+      openWs(code, url);
+      pushNet({ type: "ping", senderId: myId });
+    }
+
+    function sendMyState() {
+      pushNet({
+        type: "state",
+        senderId: myId,
+        name: me.name,
+        jet: me.jet,
+        x: me.x,
+        y: me.y,
+        tilt: me.tilt,
+        hp: me.hp,
+        maxHp: me.maxHp,
+        kills: me.kills,
+        deaths: me.deaths,
+        alive: me.alive
+      });
+    }
+
+    function burst(x, y, col, n = 12) {
+      for (let i = 0; i < n; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const spd = 40 + Math.random() * 190;
+        sparks.push({
+          x,
+          y,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          s: 2 + Math.random() * 4,
+          col,
+          life: 0.25 + Math.random() * 0.4
+        });
+      }
+    }
+
+    function shootGun() {
+      if (!playing || !me.alive || me.shotCd > 0) return;
+      const spec = JETS[me.jet];
+      me.shotCd = spec.cd;
+
+      const base = -Math.PI / 2 + me.tilt * 0.25;
+      [-10, 10].forEach((ox, idx) => {
+        const ang = base + (idx === 0 ? -0.04 : 0.04);
+        const spd = 700;
+        const bx = me.x + ox;
+        const by = me.y - 18;
+        const vx = Math.cos(ang) * spd;
+        const vy = Math.sin(ang) * spd;
+
+        shots.push({ owner: myId, x: bx, y: by, vx, vy, dmg: spec.dmg, life: 1.7 });
+        pushNet({ type: "bullet", senderId: myId, x: bx, y: by, vx, vy, dmg: spec.dmg });
+      });
+
+      beep(620, 0.04, "square", 0.03);
+    }
+
+    function shootMissile() {
+      if (!playing || !me.alive || me.mslCd > 0) return;
+      me.mslCd = 2.2;
+
+      let lock = null;
+      let best = 420;
+      foes.forEach((f) => {
+        if (!f.alive) return;
+        const d = Math.hypot(f.x - me.x, f.y - me.y);
+        if (d < best) {
+          best = d;
+          lock = f;
+        }
+      });
+
+      const ang = lock ? Math.atan2(lock.y - me.y, lock.x - me.x) : -Math.PI / 2;
+      const spd = 490;
+      const vx = Math.cos(ang) * spd;
+      const vy = Math.sin(ang) * spd;
+
+      rockets.push({ owner: myId, x: me.x, y: me.y - 14, vx, vy, dmg: 55, life: 2.6 });
+      pushNet({ type: "missile", senderId: myId, x: me.x, y: me.y - 14, vx, vy, dmg: 55 });
+      beep(240, 0.13, "sawtooth", 0.04);
+    }
+
+    function hurtMe(dmg) {
+      if (!me.alive) return;
+      me.hp -= dmg;
+      burst(me.x, me.y, "#ff5252", 6);
+      beep(150, 0.08, "sawtooth", 0.04);
+
+      if (me.hp <= 0) {
+        me.hp = 0;
+        me.alive = false;
+        me.deaths += 1;
+        me.reviveAt = 3.0;
+        burst(me.x, me.y, "#ffab40", 24);
+        beep(95, 0.3, "sawtooth", 0.06);
+        sendMyState();
+      }
+    }
+
+    function reviveMe() {
+      const spec = JETS[me.jet];
+      me.maxHp = spec.hp;
+      me.hp = spec.hp;
+      me.x = 70 + Math.random() * Math.max(80, w - 140);
+      me.y = h * 0.72;
+      me.alive = true;
+      me.reviveAt = 0;
+      aimPos = { x: me.x, y: me.y };
+      sendMyState();
+    }
+
+    function stepBullets(dt) {
+      for (let i = shots.length - 1; i >= 0; i--) {
+        const b = shots[i];
+        b.x += b.vx * dt;
+        b.y += b.vy * dt;
+        b.life -= dt;
+
+        if (b.life <= 0 || b.x < -30 || b.x > w + 30 || b.y < -30 || b.y > h + 30) {
+          shots.splice(i, 1);
+          continue;
+        }
+
+        if (b.owner === myId) {
+          let hit = false;
+          foes.forEach((f) => {
+            if (hit || !f.alive) return;
+            if (Math.hypot(b.x - f.x, b.y - f.y) < 22) {
+              hit = true;
+              burst(b.x, b.y, "#ff8a80", 5);
+              pushNet({ type: "hit_player", senderId: myId, targetId: f.id, dmg: b.dmg });
+              if (f.hp - b.dmg <= 0) {
+                f.alive = false;
+                f.hp = 0;
+                me.kills += 1;
+                notice("Downed " + f.name);
+              }
+            }
+          });
+          if (hit) shots.splice(i, 1);
+        } else if (me.alive && Math.hypot(b.x - me.x, b.y - me.y) < 18) {
+          hurtMe(b.dmg);
+          shots.splice(i, 1);
+        }
+      }
+
+      for (let i = rockets.length - 1; i >= 0; i--) {
+        const r = rockets[i];
+        r.life -= dt;
+
+        if (r.owner === myId) {
+          let lock = null;
+          let best = 420;
+          foes.forEach((f) => {
+            if (!f.alive) return;
+            const d = Math.hypot(f.x - r.x, f.y - r.y);
+            if (d < best) {
+              best = d;
+              lock = f;
+            }
+          });
+
+          if (lock) {
+            const want = Math.atan2(lock.y - r.y, lock.x - r.x);
+            const cur = Math.atan2(r.vy, r.vx);
+            let diff = want - cur;
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            while (diff < -Math.PI) diff += Math.PI * 2;
+            const next = cur + Math.max(-5.5 * dt, Math.min(5.5 * dt, diff));
+            r.vx = Math.cos(next) * 500;
+            r.vy = Math.sin(next) * 500;
+          }
+        }
+
+        r.x += r.vx * dt;
+        r.y += r.vy * dt;
+        sparks.push({ x: r.x, y: r.y, vx: 0, vy: 0, s: 3, col: "#b9f6ca", life: 0.15 });
+
+        let boom = false;
+        if (r.owner === myId) {
+          foes.forEach((f) => {
+            if (boom || !f.alive) return;
+            if (Math.hypot(r.x - f.x, r.y - f.y) < 26) {
+              boom = true;
+              pushNet({ type: "hit_player", senderId: myId, targetId: f.id, dmg: r.dmg });
+              if (f.hp - r.dmg <= 0) {
+                f.alive = false;
+                f.hp = 0;
+                me.kills += 1;
+                notice("Downed " + f.name);
+              }
+            }
+          });
+        } else if (me.alive && Math.hypot(r.x - me.x, r.y - me.y) < 22) {
+          boom = true;
+          hurtMe(r.dmg);
+        }
+
+        if (boom) {
+          burst(r.x, r.y, "#ff7043", 15);
+          beep(120, 0.18, "sawtooth", 0.05);
+          rockets.splice(i, 1);
+          continue;
+        }
+
+        if (r.life <= 0 || r.x < -40 || r.x > w + 40 || r.y < -40 || r.y > h + 40) {
+          rockets.splice(i, 1);
+        }
+      }
+    }
+
+    function stepMe(dt) {
+      if (!playing) return;
+      if (me.shotCd > 0) me.shotCd = Math.max(0, me.shotCd - dt);
+      if (me.mslCd > 0) me.mslCd = Math.max(0, me.mslCd - dt);
+
+      if (!me.alive) {
+        me.reviveAt -= dt;
+        if (me.reviveAt <= 0) reviveMe();
+        return;
+      }
+
+      const spec = JETS[me.jet];
+      let dx = 0;
+      let dy = 0;
+      if (held.has("KeyA") || held.has("ArrowLeft")) dx -= 1;
+      if (held.has("KeyD") || held.has("ArrowRight")) dx += 1;
+      if (held.has("KeyW") || held.has("ArrowUp")) dy -= 1;
+      if (held.has("KeyS") || held.has("ArrowDown")) dy += 1;
+
+      if (dx || dy) {
+        const len = Math.hypot(dx, dy);
+        me.x += (dx / len) * spec.speed * dt;
+        me.y += (dy / len) * spec.speed * dt;
+        me.tilt += ((dx / len) * 0.45 - me.tilt) * Math.min(1, dt * 12);
+      } else if (dragging) {
+        const tx = aimPos.x - me.x;
+        const ty = aimPos.y - me.y;
+        const dist = Math.hypot(tx, ty);
+        if (dist > 4) {
+          const step = Math.min(dist, spec.speed * 1.15 * dt);
+          me.x += (tx / dist) * step;
+          me.y += (ty / dist) * step;
+          const bank = Math.max(-0.45, Math.min(0.45, tx / 120));
+          me.tilt += (bank - me.tilt) * Math.min(1, dt * 12);
+        } else {
+          me.tilt *= Math.pow(0.05, dt);
+        }
+      } else {
+        me.tilt *= Math.pow(0.05, dt);
+      }
+
+      me.x = Math.max(24, Math.min(w - 24, me.x));
+      me.y = Math.max(36, Math.min(h - 36, me.y));
+
+      if (held.has("Space") || firingTouch) shootGun();
+      if (held.has("ShiftLeft") || held.has("ShiftRight") || held.has("KeyE")) shootMissile();
+    }
+
+    function pruneFoes() {
+      const now = Date.now();
+      foes.forEach((f, id) => {
+        if (now - f.seen > 4500) foes.delete(id);
+      });
+    }
+
+    function esc(s) {
+      return s.replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+    }
+
+    function refreshRoster() {
+      const names = [me.name + " (You)"];
+      foes.forEach((f) => names.push(f.name));
+      onlineCnt.textContent = String(names.length);
+      onlineNames.textContent = names.join(", ");
+    }
+
+    function refreshHud() {
+      hudName.textContent = me.name;
+      hudRoom.textContent = roomCode;
+      hudWs.textContent = sockUp ? "ON" : "OFF";
+      hudKills.textContent = String(me.kills);
+      hudDeaths.textContent = String(me.deaths);
+      hudHp.textContent = me.alive ? String(Math.ceil(me.hp)) : "REVIVE " + Math.max(0, me.reviveAt).toFixed(1) + "s";
+
+      const pct = Math.max(0, Math.min(100, (me.hp / me.maxHp) * 100));
+      hpFill.style.width = pct + "%";
+      hpFill.style.background = pct > 35 ? "#00e676" : "#ff5252";
+
+      if (me.mslCd <= 0) {
+        hudMsl.textContent = "READY";
+        mslBtn.disabled = !me.alive;
+      } else {
+        hudMsl.textContent = me.mslCd.toFixed(1) + "s";
+        mslBtn.disabled = true;
+      }
+
+      const rows = [{ name: me.name, kills: me.kills, me: true }];
+      foes.forEach((f) => rows.push({ name: f.name, kills: f.kills, me: false }));
+      rows.sort((a, b) => b.kills - a.kills);
+      boardList.innerHTML = rows
+        .map((r) => `<div class="board-item ${r.me ? "me" : ""}"><span>${esc(r.name)}</span><span>${r.kills}</span></div>`)
+        .join("");
+    }
+
+    function drawJet(p, isMe) {
+      if (!p.alive) return;
+      const spec = JETS[p.jet] || JETS.raptor;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.tilt);
+
+      ctx.fillStyle = spec.wing;
+      ctx.beginPath();
+      ctx.moveTo(0, -22);
+      ctx.lineTo(26, 10);
+      ctx.lineTo(8, 14);
+      ctx.lineTo(0, 20);
+      ctx.lineTo(-8, 14);
+      ctx.lineTo(-26, 10);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = spec.main;
+      ctx.beginPath();
+      ctx.moveTo(0, -25);
+      ctx.lineTo(8, 14);
+      ctx.lineTo(0, 22);
+      ctx.lineTo(-8, 14);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = "#b9f6ca";
+      ctx.fillRect(-3, -8, 6, 9);
+
+      if (!isMe) {
+        ctx.strokeStyle = "#ff5252";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(-24, -24, 48, 48);
+      }
+      ctx.restore();
+
+      ctx.fillStyle = isMe ? "#69f0ae" : "#ff8a80";
+      ctx.font = "bold 11px Courier New";
+      ctx.textAlign = "center";
+      ctx.fillText(p.name, p.x, p.y - 32);
+
+      if (p.hp < p.maxHp) {
+        ctx.fillStyle = "#1b261d";
+        ctx.fillRect(p.x - 18, p.y + 24, 36, 4);
+        ctx.fillStyle = isMe ? "#00e676" : "#ff5252";
+        ctx.fillRect(p.x - 18, p.y + 24, 36 * Math.max(0, p.hp / p.maxHp), 4);
+      }
+    }
+
+    function draw() {
+      ctx.fillStyle = "#0a130d";
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.strokeStyle = "rgba(76, 175, 80, 0.06)";
+      ctx.lineWidth = 1;
+      for (let x = 0; x < w; x += 48) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let y = 0; y < h; y += 48) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      clouds.forEach((c) => {
+        ctx.fillStyle = `rgba(165, 214, 167, ${c.a})`;
+        ctx.fillRect(c.x, c.y, c.w, c.h);
+      });
+
+      shots.forEach((b) => {
+        ctx.fillStyle = b.owner === myId ? "#69f0ae" : "#ff5252";
+        ctx.fillRect(b.x - 2.5, b.y - 5, 5, 10);
+      });
+
+      rockets.forEach((r) => {
+        ctx.save();
+        ctx.translate(r.x, r.y);
+        ctx.rotate(Math.atan2(r.vy, r.vx));
+        ctx.fillStyle = r.owner === myId ? "#ffab40" : "#ff5252";
+        ctx.fillRect(-8, -3, 16, 6);
+        ctx.restore();
+      });
+
+      foes.forEach((f) => drawJet(f, false));
+      if (playing) drawJet(me, true);
+
+      sparks.forEach((s) => {
+        ctx.fillStyle = s.col;
+        ctx.fillRect(s.x - s.s / 2, s.y - s.s / 2, s.s, s.s);
+      });
+    }
+
+    let prevT = performance.now();
+    let netTick = 0;
+
+    function tick(now) {
+      const dt = Math.min(0.05, (now - prevT) / 1000);
+      prevT = now;
+
+      clouds.forEach((c) => {
+        c.y += c.spd * dt;
+        if (c.y > h + 40) {
+          c.y = -c.h - 20;
+          c.x = Math.random() * w;
+        }
+      });
+
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        s.x += s.vx * dt;
+        s.y += s.vy * dt;
+        s.life -= dt;
+        if (s.life <= 0) sparks.splice(i, 1);
+      }
+
+      stepMe(dt);
+      stepBullets(dt);
+      pruneFoes();
+
+      netTick -= dt;
+      if (netTick <= 0) {
+        netTick = 0.06;
+        sendMyState();
+        if (playing) refreshHud();
+        else refreshRoster();
+      }
+
+      draw();
+      requestAnimationFrame(tick);
+    }
+
+    function copyLink() {
+      const u = new URL(location.href);
+      u.searchParams.set("room", cleanRoom(roomInp.value));
+      u.searchParams.set("ws", cleanWs(wsInp.value));
+      const str = u.toString();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(str).then(() => notice("Link copied")).catch(() => notice(str));
+      } else {
+        notice(str);
+      }
+    }
+
+    document.querySelectorAll("#jetPick .pick").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#jetPick .pick").forEach((b) => b.classList.remove("on"));
+        btn.classList.add("on");
+        chosenJet = btn.dataset.jet;
+      });
+    });
+
+    nameInp.addEventListener("input", () => {
+      me.name = cleanName(nameInp.value);
+      refreshRoster();
+    });
+
+    roomInp.addEventListener("input", () => {
+      connectRoom(cleanRoom(roomInp.value), cleanWs(wsInp.value));
+      refreshRoster();
+    });
+
+    wsInp.addEventListener("change", () => {
+      wsInp.value = cleanWs(wsInp.value);
+      connectRoom(cleanRoom(roomInp.value), wsInp.value);
+    });
+
+    copyLobbyBtn.addEventListener("click", copyLink);
+    copyHudBtn.addEventListener("click", copyLink);
+    mslBtn.addEventListener("click", shootMissile);
+
+    startBtn.addEventListener("click", () => {
+      me.name = cleanName(nameInp.value);
+      nameInp.value = me.name;
+      roomInp.value = cleanRoom(roomInp.value);
+      wsInp.value = cleanWs(wsInp.value);
+
+      const spec = JETS[chosenJet];
+      me.jet = chosenJet;
+      me.maxHp = spec.hp;
+      me.hp = spec.hp;
+      me.kills = 0;
+      me.deaths = 0;
+      me.alive = true;
+      me.x = w * 0.5;
+      me.y = h * 0.72;
+      aimPos = { x: me.x, y: me.y };
+
+      connectRoom(roomInp.value, wsInp.value);
+      sendMyState();
+
+      playing = true;
+      lobby.style.display = "none";
+      hud.style.display = "block";
+      refreshHud();
+      beep(440, 0.1, "square", 0.04);
+    });
+
+    backBtn.addEventListener("click", () => {
+      playing = false;
+      hud.style.display = "none";
+      lobby.style.display = "flex";
+      refreshRoster();
+    });
+
+    addEventListener("keydown", (e) => {
+      if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code) && playing) {
+        e.preventDefault();
+      }
+      held.add(e.code);
+    });
+
+    addEventListener("keyup", (e) => held.delete(e.code));
+
+    canvas.addEventListener("pointerdown", (e) => {
+      if (!playing) return;
+      dragging = true;
+      firingTouch = true;
+      aimPos = { x: e.clientX, y: e.clientY };
+      shootGun();
+    });
+
+    addEventListener("pointermove", (e) => {
+      if (!dragging || !playing) return;
+      aimPos = { x: e.clientX, y: e.clientY };
+    });
+
+    addEventListener("pointerup", () => {
+      dragging = false;
+      firingTouch = false;
+    });
+
+    addEventListener("beforeunload", () => {
+      pushNet({ type: "leave", senderId: myId });
+    });
+
+    addEventListener("resize", () => {
+      w = canvas.width = innerWidth;
+      h = canvas.height = innerHeight;
+      makeClouds();
+    });
+
+    makeClouds();
+    connectRoom(cleanRoom(roomInp.value), cleanWs(wsInp.value));
+    refreshRoster();
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>
