@@ -16,8 +16,8 @@
     html, body {
       width: 100%;
       height: 100%;
-      background: rgb(26, 28, 30);
-      color: rgb(208, 212, 216);
+      background: #140e08;
+      color: #e6c78a;
       font-family: "Courier New", monospace;
       overflow: hidden;
       touch-action: none;
@@ -49,34 +49,35 @@
     }
 
     .box {
-      background: rgba(34, 37, 40, 0.88);
-      border: 2px solid rgb(110, 115, 120);
+      background: rgba(33, 23, 13, 0.9);
+      border: 2px solid #9c7238;
       padding: 9px 11px;
+      box-shadow: 3px 3px 0 #0b0704;
     }
 
     .line {
       font-size: 12px;
       line-height: 1.5;
-      color: rgb(180, 185, 190);
+      color: #c7a263;
       font-weight: bold;
     }
 
     .hi {
-      color: rgb(238, 241, 244);
+      color: #ffcf70;
     }
 
     .hp-track {
       width: 165px;
       height: 9px;
-      background: rgb(20, 22, 24);
-      border: 1px solid rgb(125, 130, 135);
+      background: #120c07;
+      border: 1px solid #b58745;
       margin: 5px 0;
     }
 
     .hp-fill {
       height: 100%;
       width: 100%;
-      background: rgb(207, 212, 217);
+      background: #e0a443;
     }
 
     .board {
@@ -86,8 +87,8 @@
 
     .board-head {
       font-size: 12px;
-      color: rgb(194, 199, 204);
-      border-bottom: 1px solid rgb(110, 115, 120);
+      color: #f0c878;
+      border-bottom: 1px solid #8f6730;
       padding-bottom: 4px;
       margin-bottom: 5px;
       font-weight: bold;
@@ -99,11 +100,11 @@
       font-size: 12px;
       padding: 2px 0;
       gap: 12px;
-      color: rgb(200, 205, 210);
+      color: #d6b376;
     }
 
     .board-item.me {
-      color: rgb(255, 255, 255);
+      color: #ffe29e;
       font-weight: bold;
     }
 
@@ -120,9 +121,9 @@
 
     .tip {
       font-size: 11px;
-      color: rgb(180, 185, 190);
-      background: rgba(34, 37, 40, 0.85);
-      border: 1px solid rgb(110, 115, 120);
+      color: #cfa969;
+      background: rgba(33, 23, 13, 0.88);
+      border: 1px solid #8f6730;
       padding: 6px 9px;
     }
 
@@ -133,9 +134,9 @@
     }
 
     .btn {
-      background: rgb(43, 46, 50);
-      color: rgb(226, 230, 234);
-      border: 2px solid rgb(115, 120, 125);
+      background: #2b1d10;
+      color: #f2cb7e;
+      border: 2px solid #9c7238;
       padding: 7px 11px;
       font-family: inherit;
       font-size: 12px;
@@ -144,8 +145,8 @@
     }
 
     .btn:hover {
-      border-color: rgb(238, 241, 244);
-      background: rgb(58, 62, 68);
+      border-color: #ffd887;
+      background: #3d2a17;
     }
 
     .btn:disabled {
@@ -159,7 +160,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(20, 22, 24, 0.95);
+      background: rgba(16, 11, 6, 0.95);
       padding: 14px;
       z-index: 10;
     }
@@ -167,22 +168,22 @@
     .card {
       width: 100%;
       max-width: 470px;
-      background: rgb(36, 39, 42);
-      border: 2px solid rgb(120, 125, 130);
+      background: #24180d;
+      border: 2px solid #a87b3d;
       padding: 20px;
-      box-shadow: 4px 4px 0 rgb(17, 19, 21);
+      box-shadow: 5px 5px 0 #0c0805;
     }
 
     .title {
       font-size: 24px;
       font-weight: bold;
-      color: rgb(238, 241, 244);
+      color: #ffd682;
       letter-spacing: 1px;
     }
 
     .sub {
       font-size: 12px;
-      color: rgb(166, 171, 176);
+      color: #b89052;
       margin-bottom: 16px;
     }
 
@@ -193,16 +194,16 @@
     .lbl {
       display: block;
       font-size: 12px;
-      color: rgb(194, 199, 204);
+      color: #e3be7d;
       margin-bottom: 5px;
       font-weight: bold;
     }
 
     .txt {
       width: 100%;
-      background: rgb(22, 24, 26);
-      border: 2px solid rgb(99, 104, 109);
-      color: rgb(238, 241, 244);
+      background: #140d07;
+      border: 2px solid #855f2c;
+      color: #ffdc96;
       padding: 8px 10px;
       font-family: inherit;
       font-size: 13px;
@@ -210,7 +211,7 @@
     }
 
     .txt:focus {
-      border-color: rgb(220, 224, 229);
+      border-color: #ffd47d;
     }
 
     .row {
@@ -225,9 +226,9 @@
     }
 
     .pick {
-      background: rgb(25, 27, 29);
-      border: 2px solid rgb(92, 97, 102);
-      color: rgb(184, 189, 194);
+      background: #181009;
+      border: 2px solid #7d5928;
+      color: #cfa969;
       padding: 8px 6px;
       font-family: inherit;
       font-size: 11px;
@@ -236,31 +237,31 @@
     }
 
     .pick.on {
-      background: rgb(61, 66, 71);
-      border-color: rgb(238, 241, 244);
-      color: rgb(255, 255, 255);
+      background: #473019;
+      border-color: #ffd887;
+      color: #fff0c7;
     }
 
     .room-box {
-      background: rgb(22, 24, 26);
-      border: 1px solid rgb(92, 97, 102);
+      background: #140d07;
+      border: 1px solid #7d5928;
       padding: 8px 10px;
       font-size: 12px;
-      color: rgb(166, 171, 176);
+      color: #b89052;
       margin-bottom: 14px;
     }
 
     .room-names {
-      color: rgb(220, 224, 229);
+      color: #edd098;
       margin-top: 3px;
       word-break: break-word;
     }
 
     .go-btn {
       width: 100%;
-      background: rgb(70, 75, 80);
-      border: 2px solid rgb(226, 230, 234);
-      color: rgb(255, 255, 255);
+      background: #54381c;
+      border: 2px solid #ffd47d;
+      color: #fff2ce;
       padding: 11px;
       font-family: inherit;
       font-size: 14px;
@@ -269,7 +270,7 @@
     }
 
     .go-btn:hover {
-      background: rgb(90, 96, 102);
+      background: #6b4724;
     }
 
     #msg {
@@ -277,9 +278,9 @@
       bottom: 58px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgb(43, 46, 50);
-      border: 1px solid rgb(226, 230, 234);
-      color: rgb(238, 241, 244);
+      background: #2b1d10;
+      border: 1px solid #ffd47d;
+      color: #ffdf9e;
       padding: 5px 12px;
       font-size: 12px;
       font-weight: bold;
@@ -388,9 +389,9 @@
     const hpFill = document.getElementById("hpFill");
 
     const JETS = {
-      raptor: { speed: 370, hp: 100, cd: 0.13, dmg: 18, main: "rgb(207, 212, 217)", wing: "rgb(103, 108, 114)" },
-      hog:    { speed: 300, hp: 150, cd: 0.10, dmg: 22, main: "rgb(181, 186, 192)", wing: "rgb(85, 90, 96)" },
-      felon:  { speed: 400, hp: 115, cd: 0.14, dmg: 20, main: "rgb(226, 230, 234)", wing: "rgb(120, 126, 133)" }
+      raptor: { speed: 370, hp: 100, cd: 0.13, dmg: 18, main: "#e8c076", wing: "#8f652e" },
+      hog:    { speed: 300, hp: 150, cd: 0.10, dmg: 22, main: "#cfa35b", wing: "#735022" },
+      felon:  { speed: 400, hp: 115, cd: 0.14, dmg: 20, main: "#f7d894", wing: "#a67737" }
     };
 
     const params = new URLSearchParams(location.search);
@@ -688,7 +689,7 @@
     function hurtMe(dmg) {
       if (!me.alive) return;
       me.hp -= dmg;
-      burst(me.x, me.y, "rgb(158, 164, 170)", 6);
+      burst(me.x, me.y, "#c99b52", 6);
       beep(150, 0.08, "sawtooth", 0.04);
 
       if (me.hp <= 0) {
@@ -696,7 +697,7 @@
         me.alive = false;
         me.deaths += 1;
         me.reviveAt = 3.0;
-        burst(me.x, me.y, "rgb(230, 233, 236)", 24);
+        burst(me.x, me.y, "#ffd887", 24);
         beep(95, 0.3, "sawtooth", 0.06);
         sendMyState();
       }
@@ -732,7 +733,7 @@
             if (hit || !f.alive) return;
             if (Math.hypot(b.x - f.x, b.y - f.y) < 22) {
               hit = true;
-              burst(b.x, b.y, "rgb(208, 212, 216)", 5);
+              burst(b.x, b.y, "#e6c78a", 5);
               pushNet({ type: "hit_player", senderId: myId, targetId: f.id, dmg: b.dmg });
               if (f.hp - b.dmg <= 0) {
                 f.alive = false;
@@ -779,7 +780,7 @@
 
         r.x += r.vx * dt;
         r.y += r.vy * dt;
-        sparks.push({ x: r.x, y: r.y, vx: 0, vy: 0, s: 3, col: "rgb(180, 185, 190)", life: 0.15 });
+        sparks.push({ x: r.x, y: r.y, vx: 0, vy: 0, s: 3, col: "#c7a263", life: 0.15 });
 
         let boom = false;
         if (r.owner === myId) {
@@ -802,7 +803,7 @@
         }
 
         if (boom) {
-          burst(r.x, r.y, "rgb(230, 233, 236)", 15);
+          burst(r.x, r.y, "#ffd887", 15);
           beep(120, 0.18, "sawtooth", 0.05);
           rockets.splice(i, 1);
           continue;
@@ -890,7 +891,7 @@
 
       const pct = Math.max(0, Math.min(100, (me.hp / me.maxHp) * 100));
       hpFill.style.width = pct + "%";
-      hpFill.style.background = pct > 35 ? "rgb(207, 212, 217)" : "rgb(136, 141, 146)";
+      hpFill.style.background = pct > 35 ? "#e0a443" : "#9c5928";
 
       if (me.mslCd <= 0) {
         hudMsl.textContent = "READY";
@@ -936,34 +937,34 @@
       ctx.closePath();
       ctx.fill();
 
-      ctx.fillStyle = "rgb(69, 73, 78)";
+      ctx.fillStyle = "#473019";
       ctx.fillRect(-3, -8, 6, 9);
 
       if (!isMe) {
-        ctx.strokeStyle = "rgb(158, 164, 170)";
+        ctx.strokeStyle = "#c99b52";
         ctx.lineWidth = 1.5;
         ctx.strokeRect(-24, -24, 48, 48);
       }
       ctx.restore();
 
-      ctx.fillStyle = isMe ? "rgb(238, 241, 244)" : "rgb(180, 185, 190)";
+      ctx.fillStyle = isMe ? "#ffdf9e" : "#cfa969";
       ctx.font = "bold 11px Courier New";
       ctx.textAlign = "center";
       ctx.fillText(p.name, p.x, p.y - 32);
 
       if (p.hp < p.maxHp) {
-        ctx.fillStyle = "rgb(28, 31, 34)";
+        ctx.fillStyle = "#1c1209";
         ctx.fillRect(p.x - 18, p.y + 24, 36, 4);
-        ctx.fillStyle = isMe ? "rgb(226, 230, 234)" : "rgb(158, 164, 170)";
+        ctx.fillStyle = isMe ? "#ffd47d" : "#c99b52";
         ctx.fillRect(p.x - 18, p.y + 24, 36 * Math.max(0, p.hp / p.maxHp), 4);
       }
     }
 
     function draw() {
-      ctx.fillStyle = "rgb(28, 31, 34)";
+      ctx.fillStyle = "#19110a";
       ctx.fillRect(0, 0, w, h);
 
-      ctx.strokeStyle = "rgba(210, 215, 220, 0.06)";
+      ctx.strokeStyle = "rgba(232, 192, 118, 0.06)";
       ctx.lineWidth = 1;
       for (let x = 0; x < w; x += 48) {
         ctx.beginPath();
@@ -979,12 +980,12 @@
       }
 
       clouds.forEach((c) => {
-        ctx.fillStyle = `rgba(210, 215, 220, ${c.a})`;
+        ctx.fillStyle = `rgba(232, 192, 118, ${c.a})`;
         ctx.fillRect(c.x, c.y, c.w, c.h);
       });
 
       shots.forEach((b) => {
-        ctx.fillStyle = b.owner === myId ? "rgb(255, 255, 255)" : "rgb(154, 160, 166)";
+        ctx.fillStyle = b.owner === myId ? "#fff2ce" : "#b88e4a";
         ctx.fillRect(b.x - 2.5, b.y - 5, 5, 10);
       });
 
@@ -992,7 +993,7 @@
         ctx.save();
         ctx.translate(r.x, r.y);
         ctx.rotate(Math.atan2(r.vy, r.vx));
-        ctx.fillStyle = r.owner === myId ? "rgb(230, 233, 236)" : "rgb(141, 147, 153)";
+        ctx.fillStyle = r.owner === myId ? "#ffd887" : "#a87b3d";
         ctx.fillRect(-8, -3, 16, 6);
         ctx.restore();
       });
